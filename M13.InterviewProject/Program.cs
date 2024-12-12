@@ -1,4 +1,8 @@
-﻿namespace M13.InterviewProject;
+﻿using M13.InterviewProject.BLL;
+using M13.InterviewProject.DAL;
+using M13.InterviewProject.Integration;
+
+namespace M13.InterviewProject;
 
 public class Program
 {
@@ -12,10 +16,24 @@ public class Program
             .AddEnvironmentVariables();
 
         builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services
+            .AddBll()
+            .AddIntegration(builder.Configuration)
+            .AddDal();
 
         builder.Logging.AddConsole().AddDebug();
 
         var app = builder.Build();
+        
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         app.MapControllers();
 

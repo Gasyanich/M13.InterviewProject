@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace M13.InterviewProject.Controllers
 {
@@ -165,7 +165,7 @@ namespace M13.InterviewProject.Controllers
             {
                 int count = 0;
                 var json = t.Result.Content.ReadAsStringAsync().Result;
-                var errs = JsonConvert.DeserializeObject<SpellerErrors[]>(json);
+                var errs = JsonSerializer.Deserialize<SpellerErrors[]>(json);
                 List<ISpellCheckError> list = new List<ISpellCheckError>(100);
                 for (int i = 0; i < errs.Length; i++)
                 {

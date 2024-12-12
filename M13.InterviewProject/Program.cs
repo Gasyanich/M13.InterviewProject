@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿namespace M13.InterviewProject;
 
-namespace M13.InterviewProject
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseStartup<Startup>()
-                .UseIISIntegration()
-                .UseApplicationInsights()
-                .Build();
+        var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Configuration
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+            .AddEnvironmentVariables();
 
-            host.Run();
-        }
+        builder.Services.AddControllers();
+
+        builder.Logging.AddConsole().AddDebug();
+
+        var app = builder.Build();
+
+        app.MapControllers();
+
+        app.Run();
     }
 }
